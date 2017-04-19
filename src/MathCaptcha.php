@@ -27,7 +27,7 @@ class MathCaptcha
      */
     public function label()
     {
-        return sprintf("%d + %d = ", $this->getMathFirstOperator(), $this->getMathSecondOperator());
+        return sprintf("%d + %d", $this->getMathFirstOperator(), $this->getMathSecondOperator());
     }
 
     /**
@@ -64,7 +64,7 @@ class MathCaptcha
     protected function getMathFirstOperator()
     {
         if (!$this->session->get('mathcaptcha.first')) {
-            $this->session->put('mathcaptcha.first', rand(5, 20));
+            $this->session->put('mathcaptcha.first', rand(3, 7));
         }
 
         return $this->session->get('mathcaptcha.first');
@@ -77,7 +77,7 @@ class MathCaptcha
     protected function getMathSecondOperator()
     {
         if (!$this->session->get('mathcaptcha.second')) {
-            $this->session->put('mathcaptcha.second', rand(5, 20));
+            $this->session->put('mathcaptcha.second', rand(8, 15));
         }
 
         return $this->session->get('mathcaptcha.second');
