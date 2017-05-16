@@ -75,7 +75,7 @@ class MathCaptcha
     protected function getMathFirstOperator()
     {
         if (!$this->session->get('mathcaptcha.first')) {
-            $this->session->put('mathcaptcha.first', rand(3, 7));
+            $this->session->put('mathcaptcha.first', rand(2, 7));
         }
 
         return $this->session->get('mathcaptcha.first');
@@ -88,7 +88,7 @@ class MathCaptcha
     protected function getMathSecondOperator()
     {
         if (!$this->session->get('mathcaptcha.second')) {
-            $this->session->put('mathcaptcha.second', rand(8, 15));
+            $this->session->put('mathcaptcha.second', rand(5, 11));
         }
 
         return $this->session->get('mathcaptcha.second');
