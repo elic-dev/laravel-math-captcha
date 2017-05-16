@@ -59,3 +59,16 @@ $this->validate($request, [
 
 Add corresponding translation string to your `lang/validation.php` files.
 
+##### Reset
+
+This package does not generate a new math question for each request. Once the
+form has been submited without validation erros you can reset the library to force
+generate a new question.
+
+```php
+app('mathcaptcha')->reset();
+```
+
+
+
+

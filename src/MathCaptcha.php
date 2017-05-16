@@ -57,6 +57,17 @@ class MathCaptcha
     }
 
     /**
+     * Reset the math operators to regenerate a new question.
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        $this->session->forget('mathcaptcha.first');
+        $this->session->forget('mathcaptcha.second');
+    }
+
+    /**
      * The first math operand.
      *
      * @return integer
