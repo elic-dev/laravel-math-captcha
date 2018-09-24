@@ -38,7 +38,9 @@ class MathCaptcha
     public function input(array $attributes = [])
     {
         $attributes['type'] = 'text';
+        $attributes['id'] = 'mathcaptcha';
         $attributes['name'] = 'mathcaptcha';
+        $attributes['required'] = 'required';
         $attributes['value'] = old('mathcaptcha');
 
         $html = '<input ' . $this->buildAttributes($attributes) . ' />';
