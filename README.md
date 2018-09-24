@@ -1,4 +1,4 @@
-# Very simple math captcha for Laravel
+# Very simple math captcha for Laravel5
 
 ## Installation
 
@@ -6,11 +6,13 @@
 composer require elic-dev/laravel-math-captcha
 ```
 
-## Laravel 5
+### Setup Laravel > 5.5
 
-### Setup
+This package supports Laravel Package Auto-Discovery.
 
-Add ServiceProvider to the providers array in `app/config/app.php`.
+### Setup Laravel <= 5.4
+
+You can add the ServiceProvider to the providers array in `app/config/app.php`.
 
 ```
 ElicDev\MathCaptcha\MathCaptchaServiceProvider::class,
