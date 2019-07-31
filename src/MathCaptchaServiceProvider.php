@@ -4,6 +4,7 @@ namespace ElicDev\MathCaptcha;
 
 use Illuminate\Support\ServiceProvider;
 
+
 class MathCaptchaServiceProvider extends ServiceProvider
 {
     /**
@@ -26,7 +27,7 @@ class MathCaptchaServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('mathcaptcha', function ($app) {
-            return new MathCaptcha($this->app['session']);
+            return new MathematicsCaptcha($this->app['session']);
         });
     }
 
