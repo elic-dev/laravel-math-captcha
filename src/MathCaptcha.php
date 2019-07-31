@@ -10,7 +10,9 @@ class MathCaptcha
      * @var SessionManager
      */
     private $session;
-
+    
+    private $operandsArray = array();
+    
     /**
      *
      * @param SessionManager|null $session
@@ -18,6 +20,8 @@ class MathCaptcha
     public function __construct(SessionManager $session = null)
     {
         $this->session = $session;
+        
+        $this->operandsArray = array('+', '*', '-');
     }
 
     /**
@@ -27,7 +31,12 @@ class MathCaptcha
      */
     public function label()
     {
-        return sprintf("%d + %d", $this->getMathFirstOperator(), $this->getMathSecondOperator());
+        $operand = $this->getMathOperand();
+        
+        if($this->getMathFirstOperator() > $this->getMathSecondOperator())
+        return sprintf("%d $operand %d", $this->getMathFirstOperator(), $this->getMathSecondOperator());
+        else
+        return sprintf("%d $operand %d", $this->getMathSecondOperator(), $this->getMathFirstOperator());
     }
 
     /**
@@ -67,6 +76,21 @@ class MathCaptcha
     {
         $this->session->forget('mathcaptcha.first');
         $this->session->forget('mathcaptcha.second');
+        $this->session->forget('mathcaptcha.operand');
+    }
+    
+    /**
+     * Operand to be used ('*','-','+')
+     * 
+     * @return character
+     */
+    protected function getMathOperand()
+    {
+        if (!$this->session->get('mathcaptcha.operand')) {
+            $this->session->put('mathcaptcha.operand', $this->operandsArray[rand(0, 2)]);
+        }
+        
+        return $this->session->get('mathcaptcha.operand');
     }
 
     /**
@@ -102,7 +126,17 @@ class MathCaptcha
      */
     protected function getMathResult()
     {
-        return $this->getMathFirstOperator() + $this->getMathSecondOperator();
+        switch ($this->getMathOperand())
+        {
+            case '+' : return $this->getMathFirstOperator() + $this->getMathSecondOperator(); break;
+            case '*' : return $this->getMathFirstOperator() * $this->getMathSecondOperator(); break;
+            case '-' :
+                if($this->getMathFirstOperator() > $this->getMathSecondOperator())
+                return $this->getMathFirstOperator() - $this->getMathSecondOperator();
+                else
+                return $this->getMathSecondOperator() - $this->getMathFirstOperator();
+                break;
+        }        
     }
 
     /**
