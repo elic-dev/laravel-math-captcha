@@ -12,6 +12,15 @@ class MathCaptcha
     private $session;
 
     /**
+     * @var
+     */
+    protected $operandsArray = [
+        '+',
+        '-',
+        '*'
+    ];
+
+    /**
      *
      * @param SessionManager|null $session
      */
@@ -27,7 +36,10 @@ class MathCaptcha
      */
     public function label()
     {
-        return sprintf("%d + %d", $this->getMathFirstOperator(), $this->getMathSecondOperator());
+        if($this->getMathFirstOperator() > $this->getMathSecondOperator())
+            return sprintf("%d %s %d", $this->getMathFirstOperator(), $this->getMathOperand(), $this->getMathSecondOperator());
+        else
+            return sprintf("%d %s %d", $this->getMathSecondOperator(), $this->getMathOperand(), $this->getMathFirstOperator());
     }
 
     /**
@@ -38,7 +50,9 @@ class MathCaptcha
     public function input(array $attributes = [])
     {
         $attributes['type'] = 'text';
+        $attributes['id'] = 'mathcaptcha';
         $attributes['name'] = 'mathcaptcha';
+        $attributes['required'] = 'required';
         $attributes['value'] = old('mathcaptcha');
 
         $html = '<input ' . $this->buildAttributes($attributes) . ' />';
@@ -65,7 +79,23 @@ class MathCaptcha
     {
         $this->session->forget('mathcaptcha.first');
         $this->session->forget('mathcaptcha.second');
+        $this->session->forget('mathcaptcha.operand');
     }
+
+    /**
+     * Operand to be used ('*','-','+')
+     * 
+     * @return character
+     */
+    protected function getMathOperand()
+    {
+        if (!$this->session->get('mathcaptcha.operand')) {
+            $this->session->put('mathcaptcha.operand', $this->operandsArray[rand(0, 2)]);
+        }
+        
+        return $this->session->get('mathcaptcha.operand');
+    }
+
 
     /**
      * The first math operand.
@@ -100,7 +130,17 @@ class MathCaptcha
      */
     protected function getMathResult()
     {
-        return $this->getMathFirstOperator() + $this->getMathSecondOperator();
+        switch ($this->getMathOperand())
+        {
+            case '+' : return $this->getMathFirstOperator() + $this->getMathSecondOperator(); break;
+            case '*' : return $this->getMathFirstOperator() * $this->getMathSecondOperator(); break;
+            case '-' :
+                if($this->getMathFirstOperator() > $this->getMathSecondOperator())
+                    return $this->getMathFirstOperator() - $this->getMathSecondOperator();
+                else
+                    return $this->getMathSecondOperator() - $this->getMathFirstOperator();
+                break;
+        }
     }
 
     /**
