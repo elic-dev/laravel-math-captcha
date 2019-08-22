@@ -31,8 +31,11 @@ class MathCaptcha
     public function label()
     {
         if(config('math-captcha.text')) {
-            return sprintf("%s %s %s", trans('math-captcha.numbers.' . $this->getMathSecondOperator()), 
-            trans('math-captcha.operands.' . $this->getMathOperand()), trans('math-captcha.numbers.' . $this->getMathFirstOperator()));
+            return sprintf("%s %s %s",
+                trans('mathcaptcha::math-captcha.numbers.' . $this->getMathSecondOperator()), 
+                trans('mathcaptcha::math-captcha.operands.' . $this->getMathOperand()),
+                trans('mathcaptcha::math-captcha.numbers.' . $this->getMathFirstOperator())
+            );
         } else {
             return sprintf("%d %s %d", $this->getMathSecondOperator(), $this->getMathOperand(), $this->getMathFirstOperator());
         }
