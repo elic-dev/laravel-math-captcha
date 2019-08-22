@@ -17,7 +17,7 @@ class MathCaptcha
     protected $operandsArray = [
         '+',
         '-',
-        '*'
+        '*',
     ];
 
     /**
@@ -36,10 +36,12 @@ class MathCaptcha
      */
     public function label()
     {
-        if($this->getMathFirstOperator() > $this->getMathSecondOperator())
+        if ($this->getMathFirstOperator() > $this->getMathSecondOperator()) {
             return sprintf("%d %s %d", $this->getMathFirstOperator(), $this->getMathOperand(), $this->getMathSecondOperator());
-        else
+        } else {
             return sprintf("%d %s %d", $this->getMathSecondOperator(), $this->getMathOperand(), $this->getMathFirstOperator());
+        }
+
     }
 
     /**
@@ -84,7 +86,7 @@ class MathCaptcha
 
     /**
      * Operand to be used ('*','-','+')
-     * 
+     *
      * @return character
      */
     protected function getMathOperand()
@@ -92,10 +94,9 @@ class MathCaptcha
         if (!$this->session->get('mathcaptcha.operand')) {
             $this->session->put('mathcaptcha.operand', $this->operandsArray[rand(0, 2)]);
         }
-        
+
         return $this->session->get('mathcaptcha.operand');
     }
-
 
     /**
      * The first math operand.
@@ -130,15 +131,18 @@ class MathCaptcha
      */
     protected function getMathResult()
     {
-        switch ($this->getMathOperand())
-        {
-            case '+' : return $this->getMathFirstOperator() + $this->getMathSecondOperator(); break;
-            case '*' : return $this->getMathFirstOperator() * $this->getMathSecondOperator(); break;
-            case '-' :
-                if($this->getMathFirstOperator() > $this->getMathSecondOperator())
+        switch ($this->getMathOperand()) {
+            case '+':return $this->getMathFirstOperator() + $this->getMathSecondOperator();
+                break;
+            case '*':return $this->getMathFirstOperator() * $this->getMathSecondOperator();
+                break;
+            case '-':
+                if ($this->getMathFirstOperator() > $this->getMathSecondOperator()) {
                     return $this->getMathFirstOperator() - $this->getMathSecondOperator();
-                else
+                } else {
                     return $this->getMathSecondOperator() - $this->getMathFirstOperator();
+                }
+
                 break;
         }
     }
