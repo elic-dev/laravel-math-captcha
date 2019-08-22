@@ -16,6 +16,10 @@ class MathCaptchaServiceProvider extends ServiceProvider
         $this->app['validator']->extend('mathcaptcha', function ($attribute, $value) {
             return $this->app['mathcaptcha']->verify($value);
         });
+
+        $this->publishes([
+            __DIR__ . '/config' => config_path(),
+        ], 'config');
     }
 
     /**
@@ -28,6 +32,10 @@ class MathCaptchaServiceProvider extends ServiceProvider
         $this->app->singleton('mathcaptcha', function ($app) {
             return new MathCaptcha($this->app['session']);
         });
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/math-captcha.php', 'math-captcha'
+        );
     }
 
     /**

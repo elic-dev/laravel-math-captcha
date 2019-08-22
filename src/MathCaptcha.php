@@ -3,6 +3,7 @@
 namespace ElicDev\MathCaptcha;
 
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Arr;
 
 class MathCaptcha
 {
@@ -10,15 +11,6 @@ class MathCaptcha
      * @var SessionManager
      */
     private $session;
-
-    /**
-     * @var
-     */
-    protected $operandsArray = [
-        '+',
-        '-',
-        '*',
-    ];
 
     /**
      *
@@ -30,18 +22,15 @@ class MathCaptcha
     }
 
     /**
-     * Returns the math question as string.
+     * Returns the math question as string. The second operand is always a larger
+     * number then the first one. So it's on first position because we don't want
+     * any negative results.
      *
      * @return string
      */
     public function label()
     {
-        if ($this->getMathFirstOperator() > $this->getMathSecondOperator()) {
-            return sprintf("%d %s %d", $this->getMathFirstOperator(), $this->getMathOperand(), $this->getMathSecondOperator());
-        } else {
-            return sprintf("%d %s %d", $this->getMathSecondOperator(), $this->getMathOperand(), $this->getMathFirstOperator());
-        }
-
+        return sprintf("%d %s %d", $this->getMathSecondOperator(), $this->getMathOperand(), $this->getMathFirstOperator());
     }
 
     /**
@@ -92,7 +81,10 @@ class MathCaptcha
     protected function getMathOperand()
     {
         if (!$this->session->get('mathcaptcha.operand')) {
-            $this->session->put('mathcaptcha.operand', $this->operandsArray[rand(0, 2)]);
+            $this->session->put(
+                'mathcaptcha.operand',
+                Arr::random(config('math-captcha.operands'))
+            );
         }
 
         return $this->session->get('mathcaptcha.operand');
@@ -106,7 +98,10 @@ class MathCaptcha
     protected function getMathFirstOperator()
     {
         if (!$this->session->get('mathcaptcha.first')) {
-            $this->session->put('mathcaptcha.first', rand(2, 7));
+            $this->session->put(
+                'mathcaptcha.first',
+                rand(config('math-captcha.rand-min'), config('math-captcha.rand-max'))
+            );
         }
 
         return $this->session->get('mathcaptcha.first');
@@ -119,7 +114,10 @@ class MathCaptcha
     protected function getMathSecondOperator()
     {
         if (!$this->session->get('mathcaptcha.second')) {
-            $this->session->put('mathcaptcha.second', rand(5, 11));
+            $this->session->put(
+                'mathcaptcha.second',
+                $this->getMathFirstOperator() + rand(config('math-captcha.rand-min'), config('math-captcha.rand-max'))
+            );
         }
 
         return $this->session->get('mathcaptcha.second');
@@ -132,18 +130,14 @@ class MathCaptcha
     protected function getMathResult()
     {
         switch ($this->getMathOperand()) {
-            case '+':return $this->getMathFirstOperator() + $this->getMathSecondOperator();
-                break;
-            case '*':return $this->getMathFirstOperator() * $this->getMathSecondOperator();
-                break;
+            case '+':
+                return $this->getMathFirstOperator() + $this->getMathSecondOperator();
+            case '*':
+                return $this->getMathFirstOperator() * $this->getMathSecondOperator();
             case '-':
-                if ($this->getMathFirstOperator() > $this->getMathSecondOperator()) {
-                    return $this->getMathFirstOperator() - $this->getMathSecondOperator();
-                } else {
-                    return $this->getMathSecondOperator() - $this->getMathFirstOperator();
-                }
-
-                break;
+                return abs($this->getMathFirstOperator() - $this->getMathSecondOperator());
+            default:
+                throw new \Exception('Math captcha uses an unknown operand.');
         }
     }
 
