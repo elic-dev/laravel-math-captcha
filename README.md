@@ -1,5 +1,7 @@
 # Very simple math captcha for Laravel5
 
+A simple math question (`+`,`-`,`*`) to validate user input.
+
 ## Installation
 
 ```
@@ -19,7 +21,7 @@ ElicDev\MathCaptcha\MathCaptchaServiceProvider::class,
 ```
 
 
-### Usage
+## Usage
 
 This package only returns the question and the input. You have to position it within your labels and form classes.
 
@@ -47,7 +49,7 @@ Looks like
 ![MathCaptcha Bootstrap](https://raw.githubusercontent.com/elic-dev/laravel-math-captcha/master/readme_bootstrap_sample.png)
 
 
-##### Validation
+#### Validation
 
 Add `'mathcaptcha' => 'required|mathcaptcha'` to rules array.
 
@@ -61,7 +63,7 @@ $this->validate($request, [
 
 Add corresponding translation string to your `lang/validation.php` files.
 
-##### Reset
+#### Reset
 
 This package does not generate a new math question for each request. Once the
 form has been submited without validation erros you can reset the library to force
@@ -71,6 +73,13 @@ generate a new question.
 app('mathcaptcha')->reset();
 ```
 
+## Configuration
 
+You can adjust the available operands (`+`,`-`,`*`) and minimum or maximum randum 
+values used. Some users might stuggle with more complex math operations.
+
+```
+php artisan vendor:publish --provider="ElicDev\MathCaptcha\MathCaptchaServiceProvider" --tag=config
+```
 
 
