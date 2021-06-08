@@ -26,6 +26,6 @@ return [
     /**
      * Use text instead of numbers
      */
-    'text' => true,
+    'text' => false,
 
 ];

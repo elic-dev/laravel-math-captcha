@@ -75,11 +75,23 @@ app('mathcaptcha')->reset();
 
 ## Configuration
 
+### Operands, Min, Max
+
 You can adjust the available operands (`+`,`-`,`*`) and minimum or maximum randum 
 values used. Some users might stuggle with more complex math operations.
 
+
 ```
 php artisan vendor:publish --provider="ElicDev\MathCaptcha\MathCaptchaServiceProvider" --tag=config
+```
+
+### Display as text
+
+It is possible to show the math question as text (e.g. "Four plus Five"). You can adjust a setting in the config file. This requires translations and a language files. A few languages are provided with this package.
+
+
+```
+php artisan vendor:publish --provider="ElicDev\MathCaptcha\MathCaptchaServiceProvider" --tag=lang
 ```
 
 
