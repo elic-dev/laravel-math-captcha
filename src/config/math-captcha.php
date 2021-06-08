@@ -23,4 +23,9 @@ return [
      */
     'rand-max' => 5,
 
+    /**
+     * Use text instead of numbers
+     */
+    'text' => true,
+
 ];

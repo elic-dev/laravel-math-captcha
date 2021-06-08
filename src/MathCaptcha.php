@@ -29,7 +29,15 @@ class MathCaptcha
      */
     public function label()
     {
-        return sprintf("%d %s %d", $this->getMathSecondOperator(), $this->getMathOperand(), $this->getMathFirstOperator());
+        if(config('math-captcha.text')) {
+            return sprintf("%s %s %s",
+                trans('mathcaptcha::math-captcha.numbers.' . $this->getMathSecondOperator()), 
+                trans('mathcaptcha::math-captcha.operands.' . $this->getMathOperand()),
+                trans('mathcaptcha::math-captcha.numbers.' . $this->getMathFirstOperator())
+            );
+        } else {
+            return sprintf("%d %s %d", $this->getMathSecondOperator(), $this->getMathOperand(), $this->getMathFirstOperator());
+        }
     }
 
     /**
@@ -39,13 +47,16 @@ class MathCaptcha
      */
     public function input(array $attributes = [])
     {
-        $attributes['type'] = 'text';
-        $attributes['id'] = 'mathcaptcha';
-        $attributes['name'] = 'mathcaptcha';
-        $attributes['required'] = 'required';
-        $attributes['value'] = old('mathcaptcha');
+        $default = [];
+        $default['type'] = 'text';
+        $default['id'] = 'mathcaptcha';
+        $default['name'] = 'mathcaptcha';
+        $default['required'] = 'required';
+        $default['value'] = old('mathcaptcha');
 
-        $html = '<input ' . $this->buildAttributes($attributes) . ' />';
+        $attributes = array_merge($default, $attributes);
+
+        $html = '<input ' . $this->buildAttributes($attributes) . '>';
 
         return $html;
     }
