@@ -3,7 +3,6 @@
 namespace ElicDev\MathCaptcha;
 
 use Illuminate\Session\SessionManager;
-use Illuminate\Support\Arr;
 
 class MathCaptcha
 {
@@ -83,7 +82,7 @@ class MathCaptcha
         if (!$this->session->get('mathcaptcha.operand')) {
             $this->session->put(
                 'mathcaptcha.operand',
-                Arr::random(config('math-captcha.operands'))
+                config('math-captcha.operands.' . array_rand(config('math-captcha.operands')))
             );
         }
 
