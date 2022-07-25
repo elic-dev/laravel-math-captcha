@@ -9,9 +9,6 @@
             "email": "m.lill@gmx.de"
         }
     ],
-    "require": {
-        "php": "^7.0"
-    },
     "autoload": {
         "psr-4": {
             "ElicDev\\MathCaptcha\\": "src/"
